@@ -1,16 +1,16 @@
 import hashlib
 import pandas as pan
 
-hash_list = [hashlib.md5,hashlib.sha1,hashlib.sha224,hashlib.sha256,hashlib.sha384,hashlib.sha512]
-hash_files = ["md5.csv","sha1.csv","sha224.csv","sha256.csv","sha384.csv","sha512.csv"]
+hash_list = [hashlib.md5,hashlib.sha1,hashlib.sha224,hashlib.sha256,hashlib.sha384,hashlib.sha512] # all the hash functions 
+hash_files = ["md5.csv","sha1.csv","sha224.csv","sha256.csv","sha384.csv","sha512.csv"] # all the files containing the hashes stored 
 print("Welcome to the Hash Temple!\n")
 while True:
     try:
-        start = int(input("\nWhat would you like to do today?\n1)Hash something\n2)Crack a Hash!\n3)Exit\n>>>"))
+        start = int(input("\nWhat would you like to do today?\n1)Hash something\n2)Crack a Hash!\n3)Exit\n>>>")) # start menu
         if not (start == 1 or start == 2 or start == 3):
             raise ValueError
         elif start == 3:
-            break
+            break # exit program
         elif start == 1:
             while True:
                 try:
@@ -22,10 +22,10 @@ while True:
                     plaintext = input("Input the string you want to hash (type 'file' if you want to read from a file) >>> ")
                     if plaintext == "'file'" :
                         try:
-                            file_path = input("Input ABSOLUTE PATH of the file you want >>> ")
+                            file_path = input("Input ABSOLUTE PATH of the file you want >>> ") # gets file path
                             with open(file_path,"r") as all_of_them:
-                                word_list = all_of_them.read().split("\n")
-                            ciphertext = {x : hash_list[hash_function-1](x.encode()).hexdigest() for x in word_list}
+                                word_list = all_of_them.read().split("\n") #takes in all the words in the file
+                            ciphertext = {x : hash_list[hash_function-1](x.encode()).hexdigest() for x in word_list} # hashes the words
                             print("Here are the results!")
                             for x,y in ciphertext.items():
                                 print(f"{x} : {y}\n")
@@ -33,14 +33,15 @@ while True:
                                 try:
                                     consent = input("Would you allow us to add the words to our database? Press y to accept, n to reject.\n>>> ")
                                     if consent.casefold() == "y":
+#                                       # code to add string into all the hash files
                                         for x in word_list:
                                             if not "," in x:
-                                                df = pan.read_csv("md5.csv",delimiter=",")
+                                                df = pan.read_csv("md5.csv",delimiter=",") # check if word/string exists already or not
                                                 found = False
                                                 for z in df['text']:
                                                     if z == plaintext:
                                                         found = True
-                                                        break
+                                                        break # does not add if already exits
                                                 if not found:
                                                     for y in range (hash_list.__len__()):
                                                         filee = open(hash_files[y],"a")
@@ -86,6 +87,7 @@ while True:
         elif start == 2:
             while True:
                 try:
+                    # gets hash function
                     hash_function = int(input("What hash alogorithm would you like to use?\n1)md5\n2)sha1\n3)sha224\n4)sha256\n5)sha384\n6)sha512\n7)Exit\n>>>"))
                     if hash_function < 1 or hash_function > 7:
                         raise ValueError
@@ -101,8 +103,8 @@ while True:
                     with open(file_path,"r") as all_of_them:
                         word_list = all_of_them.read().split("\n")
                     for x in word_list:
-                        df = pan.read_csv(hash_files[hash_function-1],delimiter=",")
-                        results = []
+                        df = pan.read_csv(hash_files[hash_function-1],delimiter=",") # reads the whole csv file and stores it in a dataframe
+                        results = [] # used to store all possible results ( due to collision )
                         for y in range (len(df["hash"])):
                             if df["hash"][y] == x:
                                 results.append(df["text"][y])
