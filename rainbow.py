@@ -1,5 +1,5 @@
 import hashlib
-
+# code to generate the hashes for the words
 md5 = open("md5.csv","a")
 sha1 = open("sha1.csv","a")
 sha224 = open("sha224.csv","a")
@@ -10,6 +10,7 @@ dictionary = open("words.txt","r")
 all_words = dictionary.read().split("\n")
 for x in all_words:
     if not "," in x:
+#       code for adding the hash
         md5.write(f"{x},{hashlib.md5(x.encode()).hexdigest()}\n")
         sha1.write(f"{x},{hashlib.sha1(x.encode()).hexdigest()}\n")
         sha224.write(f"{x},{hashlib.sha224(x.encode()).hexdigest()}\n")
